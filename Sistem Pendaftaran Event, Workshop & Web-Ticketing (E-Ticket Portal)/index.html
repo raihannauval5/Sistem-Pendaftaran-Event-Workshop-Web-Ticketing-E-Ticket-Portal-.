@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Registrasi Event & E-Ticketing System</title>
+
+  <!-- Google Fonts - Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. GLOBAL & RESET STYLES (Clean Light / Neutral White Theme)
+       ========================================================================== */
+    :root {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --border-focus: #0f172a;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --btn-primary: #0f172a;
+      --btn-hover: #1e293b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .app-wrapper {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Navigation Mode Switcher Bar */
+    .view-switcher {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 12px 20px;
+      border-radius: 12px;
+    }
+
+    .switcher-brand {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--btn-primary);
+      color: #ffffff;
+      border-color: var(--btn-primary);
+    }
+
+    /* Header Component */
+    .header-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .sub-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .sub-tag.admin-tag {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .header-card h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .header-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Views Container */
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    /* 2-Column Split Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Card Section */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-header {
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .card-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-main);
+      background-color: #ffffff;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    .input-readonly {
+      background-color: #f8fafc !important;
+      font-weight: 600;
+      color: #334155 !important;
+    }
+
+    /* Info Box */
+    .info-box {
+      background-color: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-item {
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .info-val {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-submit {
+      width: 100%;
+      background-color: var(--btn-primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .btn-reset {
+      background-color: #ffffff;
+      color: #991b1b;
+      border: 1px solid #fee2e2;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-reset:hover {
+      background-color: #fef2f2;
+    }
+
+    /* Ticket Card List (User View) */
+    .ticket-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ticket-item {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ticket-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .ticket-code {
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .status-terdaftar { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+    .status-hadir { background-color: #f0fdf4; color: #166534; border: 1px solid #dcfce7; }
+    .status-batal { background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+
+    .ticket-body h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .ticket-body p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 40px 20px;
+      background-color: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+    }
+
+    /* Admin View Stats Bar & Table */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .kpi-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .kpi-number {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 4px;
+    }
+
+    .toolbar-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-inputs {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .search-inputs input,
+    .search-inputs select {
+      max-width: 240px;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+    }
+
+    .table-frame {
+      overflow-x: auto;
+    }
+
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .table-custom th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+    }
+
+    .table-custom td {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    .select-compact {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Top Switcher Mode Portal -->
+    <nav class="view-switcher">
+      <span class="switcher-brand">🎟️ Event Management System</span>
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchMode('user')">User Portal</button>
+        <button class="tab-btn" onclick="switchMode('admin')">Admin Dashboard</button>
+      </div>
+    </nav>
+
+    <!-- ==========================================================================
+       2. USER PORTAL VIEW
+       ========================================================================== -->
+    <div id="view-user" class="view-section active">
+      <header class="header-card">
+        <span class="sub-tag">E-Ticketing Portal</span>
+        <h1>Portal Registrasi Event & Workshop</h1>
+        <p>Pilih acara impian Anda, dapatkan e-ticket digital resmi, dan pantau status kehadiran.</p>
+      </header>
+
+      <main class="main-grid">
+        <!-- Form Pemesanan -->
+        <section class="card">
+          <div class="card-header">
+            <h2>Formulir Pemesanan Tiket</h2>
+          </div>
+
+          <form id="form-tiket">
+            <div class="form-group">
+              <label for="namaPeserta">Nama Lengkap Peserta</label>
+              <input type="text" id="namaPeserta" placeholder="Contoh: Rian Anggara" required>
+            </div>
+
+            <div class="form-group">
+              <label for="kontak">Email / No. WhatsApp</label>
+              <input type="text" id="kontak" placeholder="rian@example.com / 08123456789" required>
+            </div>
+
+            <div class="form-group">
+              <label for="pilihanEvent">Pilih Acara / Workshop</label>
+              <select id="pilihanEvent" required>
+                <option value="">-- Pilih Acara --</option>
+                <option value="Web Development Bootcamp 2026">Web Development Bootcamp 2026</option>
+                <option value="UI/UX Design Masterclass">UI/UX Design Masterclass</option>
+                <option value="AI & Data Science Summit">AI & Data Science Summit</option>
+              </select>
+            </div>
+
+            <div class="info-box">
+              <div class="info-item">
+                <span class="info-label">Tanggal & Tempat:</span>
+                <span id="info-jadwal" class="info-val">-</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Sisa Kuota Tiket:</span>
+                <span id="info-kuota" class="info-val">-</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="kategoriTiket">Kategori Tiket</label>
+              <select id="kategoriTiket" required>
+                <option value="Reguler Pass">Reguler Pass</option>
+                <option value="VIP Pass (+ Certificate & Lunch)">VIP Pass (+ Certificate & Lunch)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="biaya">Total Biaya Tiket</label>
+              <input type="text" id="biaya" value="Rp 0" readonly class="input-readonly">
+            </div>
+
+            <button type="submit" class="btn-submit">Konfirmasi & Terbitkan Tiket</button>
+          </form>
+        </section>
+
+        <!-- E-Ticket Digital Card List -->
+        <section class="card">
+          <div class="card-header">
+            <h2>E-Ticket Digital Saya</h2>
+          </div>
+
+          <div class="ticket-list" id="container-tiket-user">
+            <div class="empty-state">
+              <p>Belum ada e-ticket yang terbit. Silakan pilih dan daftar event.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ==========================================================================
+       3. ADMIN DASHBOARD VIEW
+       ========================================================================== -->
+    <div id="view-admin" class="view-section">
+      <header class="header-card">
+        <span class="sub-tag admin-tag">Control Panel</span>
+        <h1>Dashboard Pengelola Event & Verifikasi Tiket</h1>
+        <p>Pantau jumlah pendaftar, verifikasi kehadiran peserta, dan kelola status e-ticket.</p>
+      </header>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-title">Total Terdaftar</span>
+          <span class="kpi-number" id="stat-total">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Status Terdaftar</span>
+          <span class="kpi-number" id="stat-terdaftar">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Telah Hadir</span>
+          <span class="kpi-number" id="stat-hadir">0</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-title">Dibatalkan</span>
+          <span class="kpi-number" id="stat-batal">0</span>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="toolbar-flex">
+          <div class="search-inputs">
+            <input type="text" id="admin-search" placeholder="Cari Kode, Nama, atau Event..." onkeyup="renderAdminTable()">
+            <select id="admin-filter-status" onchange="renderAdminTable()">
+              <option value="semua">Semua Status</option>
+              <option value="Terdaftar">Terdaftar</option>
+              <option value="Hadir">Hadir</option>
+              <option value="Batal">Batal</option>
+            </select>
+          </div>
+          <button class="btn-reset" onclick="resetDatabase()">Reset Database Tiket</button>
+        </div>
+
+        <div class="table-frame">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th>Kode Tiket & Peserta</th>
+                <th>Detail Acara & Kategori</th>
+                <th>Biaya Tiket</th>
+                <th>Status Kehadiran</th>
+                <th>Verifikasi Admin</th>
+              </tr>
+            </thead>
+            <tbody id="tabel-admin-body">
+              <!-- Render via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+     4. JAVASCRIPT LOGIC (Single Source of Truth)
+     ========================================================================== -->
+  <script>
+    const STORAGE_KEY_EVENT = 'DATA_EVENT_TICKET_APP';
+
+    // Database Acara
+    const EVENT_DB = {
+      "Web Development Bootcamp 2026": {
+        jadwal: "15 November 2026 | Bandung Digital Hub",
+        kuota: "15 / 20 Kursi",
+        harga: 150000
+      },
+      "UI/UX Design Masterclass": {
+        jadwal: "22 November 2026 | Coworking Space Hub Jakarta",
+        kuota: "30 / 30 Kursi",
+        harga: 200000
+      },
+      "AI & Data Science Summit": {
+        jadwal: "05 Desember 2026 | Grand Ballroom Surabaya",
+        kuota: "8 / 50 Kursi",
+        harga: 350000
+      }
+    };
+
+    // DOM Elements
+    const formTiket = document.getElementById('form-tiket');
+    const pilihanEvent = document.getElementById('pilihanEvent');
+    const kategoriTiket = document.getElementById('kategoriTiket');
+    const infoJadwal = document.getElementById('info-jadwal');
+    const infoKuota = document.getElementById('info-kuota');
+    const inputBiaya = document.getElementById('biaya');
+    const containerTiketUser = document.getElementById('container-tiket-user');
+
+    // Init App
+    window.addEventListener('DOMContentLoaded', () => {
+      renderUserTickets();
+      renderAdminTable();
+    });
+
+    // Switch View (User <-> Admin)
+    function switchMode(mode) {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById('view-user').classList.remove('active');
+      document.getElementById('view-admin').classList.remove('active');
+
+      if (mode === 'user') {
+        document.getElementById('view-user').classList.add('active');
+        tabBtns[0].classList.add('active');
+        renderUserTickets();
+      } else {
+        document.getElementById('view-admin').classList.add('active');
+        tabBtns[1].classList.add('active');
+        renderAdminTable();
+      }
+    }
+
+    // Kalkulasi Biaya & Informasi Jadwal
+    if (pilihanEvent) pilihanEvent.addEventListener('change', hitungBiaya);
+    if (kategoriTiket) kategoriTiket.addEventListener('change', hitungBiaya);
+
+    function hitungBiaya() {
+      const selectedEvent = pilihanEvent.value;
+      const selectedKategori = kategoriTiket.value;
+
+      if (selectedEvent && EVENT_DB[selectedEvent]) {
+        const data = EVENT_DB[selectedEvent];
+        infoJadwal.innerText = data.jadwal;
+        infoKuota.innerText = data.kuota;
+
+        let total = data.harga;
+        if (selectedKategori.includes('VIP')) {
+          total += 100000;
+        }
+
+        inputBiaya.value = `Rp ${total.toLocaleString('id-ID')}`;
+      } else {
+        infoJadwal.innerText = '-';
+        infoKuota.innerText = '-';
+        inputBiaya.value = 'Rp 0';
+      }
+    }
+
+    // Process Form Submit
+    if (formTiket) {
+      formTiket.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const namaPeserta = document.getElementById('namaPeserta').value.trim();
+        const kontak = document.getElementById('kontak').value.trim();
+        const eventName = pilihanEvent.value;
+        const kategori = kategoriTiket.value;
+        const totalHarga = inputBiaya.value;
+
+        if (!eventName) {
+          alert('Pilih acara terlebih dahulu!');
+          return;
+        }
+
+        const kodeTiket = 'TIX-' + Math.floor(1000 + Math.random() * 9000);
+
+        const tiketBaru = {
+          id: Date.now().toString(),
+          kode: kodeTiket,
+          nama: namaPeserta,
+          kontak: kontak,
+          event: eventName,
+          jadwal: EVENT_DB[eventName] ? EVENT_DB[eventName].jadwal : '-',
+          kategori: kategori,
+          biaya: totalHarga,
+          status: 'Terdaftar',
+          waktu: new Date().toLocaleDateString('id-ID')
+        };
+
+        const listTiket = JSON.parse(localStorage.getItem(STORAGE_KEY_EVENT)) || [];
+        listTiket.unshift(tiketBaru);
+        localStorage.setItem(STORAGE_KEY_EVENT, JSON.stringify(listTiket));
+
+        alert(`Pendaftaran Berhasil!\nKode E-Ticket Anda: ${kodeTiket}`);
+        formTiket.reset();
+        hitungBiaya();
+        renderUserTickets();
+      });
+    }
+
+    // Render User E-Tickets Card List
+    function renderUserTickets() {
+      if (!containerTiketUser) return;
+
+      const listTiket = JSON.parse(localStorage.getItem(STORAGE_KEY_EVENT)) || [];
+      containerTiketUser.innerHTML = '';
+
+      if (listTiket.length === 0) {
+        containerTiketUser.innerHTML = `
+          <div class="empty-state">
+            <p>Belum ada e-ticket yang terbit. Silakan pilih dan daftar event.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listTiket.forEach(item => {
+        const statusClass = (item.status || 'terdaftar').toLowerCase();
+        const cardHtml = `
+          <div class="ticket-item">
+            <div class="ticket-head">
+              <span class="ticket-code">${item.kode}</span>
+              <span class="status-badge status-${statusClass}">${item.status}</span>
+            </div>
+            <div class="ticket-body">
+              <h3>${item.event}</h3>
+              <p><strong>Peserta:</strong> ${item.nama} (${item.kontak})</p>
+              <p><strong>Jadwal:</strong> ${item.jadwal}</p>
+              <p><strong>Kategori:</strong> ${item.kategori} — <strong>${item.biaya}</strong></p>
+            </div>
+          </div>
+        `;
+        containerTiketUser.innerHTML += cardHtml;
+      });
+    }
+
+    // Render Admin Table & KPI Stats
+    function renderAdminTable() {
+      const tabelAdminBody = document.getElementById('tabel-admin-body');
+      if (!tabelAdminBody) return;
+
+      const listTiket = JSON.parse(localStorage.getItem(STORAGE_KEY_EVENT)) || [];
+
+      // Update KPI
+      document.getElementById('stat-total').innerText = listTiket.length;
+      document.getElementById('stat-terdaftar').innerText = listTiket.filter(t => t.status === 'Terdaftar').length;
+      document.getElementById('stat-hadir').innerText = listTiket.filter(t => t.status === 'Hadir').length;
+      document.getElementById('stat-batal').innerText = listTiket.filter(t => t.status === 'Batal').length;
+
+      const query = document.getElementById('admin-search').value.toLowerCase();
+      const selectedStatus = document.getElementById('admin-filter-status').value;
+
+      const filtered = listTiket.filter(item => {
+        const matchText = (item.kode || '').toLowerCase().includes(query) ||
+                          (item.nama || '').toLowerCase().includes(query) ||
+                          (item.event || '').toLowerCase().includes(query);
+        const matchStatus = selectedStatus === 'semua' || item.status === selectedStatus;
+        return matchText && matchStatus;
+      });
+
+      tabelAdminBody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tabelAdminBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">Tidak ada data pendaftaran tiket.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <span class="ticket-code">${item.kode}</span><br>
+            <strong>${item.nama}</strong><br>
+            <small style="color:#64748b">${item.kontak}</small>
+          </td>
+          <td>
+            <strong>${item.event}</strong><br>
+            <small style="color:#64748b">${item.kategori}</small>
+          </td>
+          <td><strong>${item.biaya}</strong></td>
+          <td>
+            <span class="status-badge status-${(item.status || 'terdaftar').toLowerCase()}">${item.status}</span>
+          </td>
+          <td>
+            <select class="select-compact" onchange="updateStatusTiket('${item.id}', this.value)">
+              <option value="Terdaftar" ${item.status === 'Terdaftar' ? 'selected' : ''}>Terdaftar</option>
+              <option value="Hadir" ${item.status === 'Hadir' ? 'selected' : ''}>Hadir (Verified)</option>
+              <option value="Batal" ${item.status === 'Batal' ? 'selected' : ''}>Batal</option>
+            </select>
+          </td>
+        `;
+        tabelAdminBody.appendChild(tr);
+      });
+    }
+
+    // Update Status Tiket dari Admin
+    function updateStatusTiket(id, statusBaru) {
+      let listTiket = JSON.parse(localStorage.getItem(STORAGE_KEY_EVENT)) || [];
+      const idx = listTiket.findIndex(t => t.id === id);
+
+      if (idx !== -1) {
+        listTiket[idx].status = statusBaru;
+        localStorage.setItem(STORAGE_KEY_EVENT, JSON.stringify(listTiket));
+        renderAdminTable();
+      }
+    }
+
+    // Reset Database
+    function resetDatabase() {
+      if (confirm('Hapus seluruh data tiket terdaftar?')) {
+        localStorage.removeItem(STORAGE_KEY_EVENT);
+        renderAdminTable();
+        renderUserTickets();
+      }
+    }
+  </script>
+</body>
+</html>
